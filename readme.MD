@@ -21,12 +21,12 @@
     ``` 
 - curl 명령 예시
     ```bash
-    curl -i -X POST 'http://localhost:8080/seller/signup' \
-    H 'Content-Type: application/json' \
+    curl -i -X POST 'http://localhost:8080/seller/signUp' \
+    -H 'Content-Type: application/json' \
     -d '{
       "email" :"seller1@example.com",
       "username": "seller1",
-      "password:: "seller1-password"
+      "password": "seller1-password"
     }'
     ```
     
