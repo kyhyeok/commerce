@@ -1,31 +1,26 @@
 package test.tdd.commerce.api.seller.signup;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tdd.commerce.CommerceApplication;
 import tdd.commerce.Seller;
 import tdd.commerce.SellerRepository;
 import tdd.commerce.command.CreateSellerCommand;
+import test.tdd.commerce.api.CommerceApiTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static test.tdd.commerce.EmailGenerator.generateEmail;
 import static test.tdd.commerce.PasswordGenerator.generatePassword;
 import static test.tdd.commerce.UsernameGenerator.generateUsername;
 
-@SpringBootTest(
-    classes = CommerceApplication.class,
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
+@CommerceApiTest
 @DisplayName("POST /seller/signUp")
-public class POST_space {
+public class POST_specs {
 
     @Test
     void 올바르게_요청하면_204_No_Content_상태코드를_반환한다(
