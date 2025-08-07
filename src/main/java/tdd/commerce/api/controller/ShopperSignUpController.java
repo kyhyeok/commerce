@@ -6,38 +6,35 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import tdd.commerce.Seller;
-import tdd.commerce.SellerRepository;
-import tdd.commerce.command.CreateSellerCommand;
+import tdd.commerce.Shopper;
+import tdd.commerce.ShopperRepository;
+import tdd.commerce.command.CreateShopperCommand;
 
 import static tdd.commerce.UserPropertyValidator.isEmailValid;
 import static tdd.commerce.UserPropertyValidator.isPasswordValid;
 import static tdd.commerce.UserPropertyValidator.isUsernameValid;
 
 @RestController
-public record SellerSignUpController(
+public record ShopperSignUpController(
     PasswordEncoder passwordEncoder,
-    SellerRepository sellerRepository
+    ShopperRepository repository
 ) {
-
-    @PostMapping("/seller/signUp")
-    ResponseEntity<?> signUp(@RequestBody CreateSellerCommand command) {
+    @PostMapping("/shopper/signUp")
+    ResponseEntity<?> signUp(@RequestBody CreateShopperCommand command) {
         if (!isCommandValid(command)) {
             return ResponseEntity.badRequest().build();
         }
 
-        String hashedPassword = passwordEncoder.encode(command.password());
-
-        var seller = new Seller();
-        seller.setEmail(command.email());
-        seller.setUsername(command.username());
-        seller.setHashedPassword(hashedPassword);
-        sellerRepository.save(seller);
+        var shopper = new Shopper();
+        shopper.setEmail(command.email());
+        shopper.setUsername(command.username());
+        shopper.setHashedPassword(passwordEncoder.encode(command.password()));
+        repository.save(shopper);
 
         return ResponseEntity.noContent().build();
     }
 
-    private static boolean isCommandValid(CreateSellerCommand command) {
+    private static boolean isCommandValid(CreateShopperCommand command) {
         return isEmailValid(command.email())
             && isUsernameValid(command.username())
             && isPasswordValid(command.password());

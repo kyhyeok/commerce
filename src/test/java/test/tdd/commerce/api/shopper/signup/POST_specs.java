@@ -1,5 +1,6 @@
-package test.tdd.commerce.api.seller.signup;
+package test.tdd.commerce.api.shopper.signup;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import tdd.commerce.Seller;
 import tdd.commerce.SellerRepository;
+import tdd.commerce.ShopperRepository;
 import tdd.commerce.command.CreateSellerCommand;
+import tdd.commerce.command.CreateShopperCommand;
 import test.tdd.commerce.api.CommerceApiTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +23,7 @@ import static test.tdd.commerce.PasswordGenerator.generatePassword;
 import static test.tdd.commerce.UsernameGenerator.generateUsername;
 
 @CommerceApiTest
-@DisplayName("POST /seller/signUp")
+@DisplayName("/shopper/signUp")
 public class POST_specs {
 
     @Test
@@ -28,15 +31,14 @@ public class POST_specs {
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        var command = new CreateSellerCommand(
+        CreateShopperCommand command = new CreateShopperCommand(
             generateEmail(),
             generateUsername(),
-            "password"
+            generatePassword()
         );
-
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -50,15 +52,14 @@ public class POST_specs {
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        var command = new CreateSellerCommand(
+        CreateShopperCommand command = new CreateShopperCommand(
             null,
             generateUsername(),
-            "password"
+            generatePassword()
         );
-
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -80,15 +81,14 @@ public class POST_specs {
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        var command = new CreateSellerCommand(
+        CreateShopperCommand command = new CreateShopperCommand(
             email,
             generateUsername(),
-            "password"
+            generatePassword()
         );
-
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -102,15 +102,14 @@ public class POST_specs {
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        var command = new CreateSellerCommand(
+        CreateShopperCommand command = new CreateShopperCommand(
             generateEmail(),
             null,
-            "password"
+            generatePassword()
         );
-
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -122,26 +121,25 @@ public class POST_specs {
     @ParameterizedTest
     @ValueSource(strings = {
         "",
-        "se",
-        "seller ",
-        "seller.",
-        "seller!",
-        "seller@",
+        "sh",
+        "shopper ",
+        "shopper.",
+        "shopper!",
+        "shopper@",
     })
     void username_속성이_올바른_형식을_따르지_않으면_400_Bad_Request_상태코드를_반환한다(
         String username,
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        var command = new CreateSellerCommand(
+        CreateShopperCommand command = new CreateShopperCommand(
             generateEmail(),
             username,
-            "password"
+            generatePassword()
         );
-
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -152,26 +150,25 @@ public class POST_specs {
 
     @ParameterizedTest
     @ValueSource(strings = {
-        "seller",
+        "shopper",
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         "0123456789",
-        "seller_",
-        "seller-"
+        "shopper_",
+        "shopper-"
     })
     void username_속성이_올바른_형식을_따르면_204_No_Content_상태코드를_반환한다(
         String username,
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        var command = new CreateSellerCommand(
+        CreateShopperCommand command = new CreateShopperCommand(
             generateEmail(),
             username,
-            "password"
+            generatePassword()
         );
-
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -187,13 +184,13 @@ public class POST_specs {
         // Arrange
         var command = new CreateSellerCommand(
             generateEmail(),
-            "seller",
+            generateUsername(),
             null
         );
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -211,13 +208,13 @@ public class POST_specs {
         // Arrange
         var command = new CreateSellerCommand(
             generateEmail(),
-            "seller",
+            generateUsername(),
             password
         );
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
+            "/shopper/signUp",
             command,
             Void.class
         );
@@ -233,17 +230,20 @@ public class POST_specs {
         // Arrange
         String email = generateEmail();
 
-        client.postForEntity(
-            "/seller/signUp",
-            new CreateSellerCommand(email, "seller", "password"),
-            Void.class
-        );
+
+        client.postForEntity("/shopper/signUp", new CreateShopperCommand(
+            email,
+            generateUsername(),
+            generatePassword()
+        ), Void.class);
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
-            new CreateSellerCommand(email, "seller", "password"),
-            Void.class
+            "/shopper/signUp", new CreateShopperCommand(
+                email,
+                generateUsername(),
+                generatePassword()
+            ), Void.class
         );
 
         // Assert
@@ -255,18 +255,18 @@ public class POST_specs {
         @Autowired TestRestTemplate client
     ) {
         // Arrange
-        String username = "seller";
+        String username = "shopper";
 
         client.postForEntity(
-            "/seller/signUp",
-            new CreateSellerCommand(generateEmail(), username, "password"),
+            "/shopper/signUp",
+            new CreateSellerCommand(generateEmail(), username, generatePassword()),
             Void.class
         );
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
-            "/seller/signUp",
-            new CreateSellerCommand(generateEmail(), username, "password"),
+            "/shopper/signUp",
+            new CreateSellerCommand(generateEmail(), username, generatePassword()),
             Void.class
         );
 
@@ -277,29 +277,30 @@ public class POST_specs {
     @Test
     void 비밀번호를_올바르게_암호화한다(
         @Autowired TestRestTemplate client,
-        @Autowired SellerRepository sellerRepository,
-        @Autowired PasswordEncoder passwordEncoder
-        ) {
+        @Autowired ShopperRepository repository,
+        @Autowired PasswordEncoder encoder
+    ) {
         // Arrange
-        CreateSellerCommand command = new CreateSellerCommand(
+        var command = new CreateShopperCommand(
             generateEmail(),
             generateUsername(),
             generatePassword()
         );
 
         // Act
-        client.postForEntity("/seller/signUp",command,Void.class);
+        client.postForEntity("/shopper/signUp", command, Void.class);
 
         // Assert
-        Seller seller = sellerRepository
+        var shopper = repository
             .findAll()
             .stream()
             .filter(x -> x.getEmail().equals(command.email()))
             .findFirst()
             .orElseThrow();
 
-        String actual = seller.getHashedPassword();
+        String actual = shopper.getHashedPassword();
         assertThat(actual).isNotNull();
-        assertThat(passwordEncoder.matches(command.password(), actual)).isTrue();
+        assertThat(encoder.matches(command.password(), actual)).isTrue();
     }
+
 }
