@@ -10,6 +10,8 @@ import tdd.commerce.Seller;
 import tdd.commerce.SellerRepository;
 import tdd.commerce.command.CreateSellerCommand;
 
+import java.util.UUID;
+
 import static tdd.commerce.UserPropertyValidator.isEmailValid;
 import static tdd.commerce.UserPropertyValidator.isPasswordValid;
 import static tdd.commerce.UserPropertyValidator.isUsernameValid;
@@ -28,8 +30,10 @@ public record SellerSignUpController(
 
         String hashedPassword = passwordEncoder.encode(command.password());
 
+        UUID id = UUID.randomUUID();
         var seller = new Seller();
         seller.setEmail(command.email());
+        seller.setId(id);
         seller.setUsername(command.username());
         seller.setHashedPassword(hashedPassword);
         sellerRepository.save(seller);
