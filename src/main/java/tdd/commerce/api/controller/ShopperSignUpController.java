@@ -10,6 +10,8 @@ import tdd.commerce.Shopper;
 import tdd.commerce.ShopperRepository;
 import tdd.commerce.command.CreateShopperCommand;
 
+import java.util.UUID;
+
 import static tdd.commerce.UserPropertyValidator.isEmailValid;
 import static tdd.commerce.UserPropertyValidator.isPasswordValid;
 import static tdd.commerce.UserPropertyValidator.isUsernameValid;
@@ -25,10 +27,13 @@ public record ShopperSignUpController(
             return ResponseEntity.badRequest().build();
         }
 
+        UUID id = UUID.randomUUID();
+        String hashedPassword = passwordEncoder.encode(command.password());
         var shopper = new Shopper();
+        shopper.setId(id);
         shopper.setEmail(command.email());
         shopper.setUsername(command.username());
-        shopper.setHashedPassword(passwordEncoder.encode(command.password()));
+        shopper.setHashedPassword(hashedPassword);
         repository.save(shopper);
 
         return ResponseEntity.noContent().build();

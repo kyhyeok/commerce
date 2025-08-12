@@ -226,3 +226,37 @@
 - [x] 서로 다른 판매자의 식별자는 서로 다르다
 - [x] 같은 판매자의 식별자는 항상 같다
 - [x] 판매자의 기본 정보가 올바르게 설정된다
+
+
+### 구매자 정보 조회
+
+요청
+- 메서드: GET
+- 경로: /shopper/me
+- 헤더
+  ```
+  Authorization: Bearer {accessToken}
+  ```
+- curl 명령 예시
+  ```bash
+  curl -i -X GET 'http://localhost:8080/shopper/me' \
+  -H 'Authorization: Bearer {accessToken}'
+  ```
+
+성공 응답
+- 상태코드: 200 OK
+- 본문
+  ```
+  ShopperMeView {
+    id: string(UUID),
+    email: string,
+    username: string
+  }
+  ```
+
+테스트
+- [x] 올바르게 요청하면 200 OK 상태코드를 반환한다
+- [x] 접근 토큰을 사용하지 않으면 401 Unauthorized 상태코드를 반환한다
+- [x] 서로 다른 구매자의 식별자는 서로 다르다
+- [x] 같은 구매자의 식별자는 항상 같다
+- [x] 구매자의 기본 정보가 올바르게 설정된다

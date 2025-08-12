@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import tdd.commerce.Shopper;
 import tdd.commerce.ShopperRepository;
 import tdd.commerce.api.JwtKeyHolder;
 import tdd.commerce.query.IssueSellerToken;
@@ -25,15 +26,16 @@ public record ShopperIssueTokenController(
                 query.password(),
                 shopper.getHashedPassword()
             ))
-            .map(shopper -> composeToken())
+            .map(this::composeToken)
             .map(AccessTokenCarrier::new)
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    private String composeToken() {
+    private String composeToken(Shopper shopper) {
         return Jwts
             .builder()
+            .setSubject(shopper.getId().toString())
             .signWith(jwtKeyHolder.key())
             .compact();
     }
