@@ -1,14 +1,15 @@
 package test.tdd.commerce.api;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 
 public class TestFixtureConfiguration {
     @Bean
+    @Scope("prototype")
     TestFixture testFixture(
-        BeanFactory beanFactory
+        Environment environment
     ) {
-        return new TestFixture(beanFactory.getBean(TestRestTemplate.class));
+        return TestFixture.create(environment);
     }
 }
