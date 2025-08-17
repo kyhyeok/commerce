@@ -3,7 +3,7 @@ package tdd.commerce.api.controller;
 import java.net.URI;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.util.Comparator;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import tdd.commerce.Product;
 import tdd.commerce.ProductRepository;
 import tdd.commerce.command.RegisterProductCommand;
+import tdd.commerce.view.ArrayCarrier;
 import tdd.commerce.view.SellerProductView;
 
 import static java.time.ZoneOffset.UTC;
+import static java.util.Comparator.*;
 
 @RestController
 public record SellerProductsController(
@@ -65,16 +67,33 @@ public record SellerProductsController(
 
         return repository.findById(id)
             .filter(product -> product.getSellerId().equals(sellerId))
-            .map(product -> new SellerProductView(
-                product.getId(),
-                product.getName(),
-                product.getImageUri(),
-                product.getDescription(),
-                product.getPriceAmount(),
-                product.getStockQuantity(),
-                product.getRegisteredTimeUtc()
-            ))
+            .map(SellerProductsController::convertToView)
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/seller/products")
+    ResponseEntity<?> getProducts(Principal user) {
+        UUID sellerId = UUID.fromString(user.getName());
+
+        SellerProductView[] items = repository
+            .findBySellerId(sellerId)
+            .stream()
+            .sorted(comparing(Product::getRegisteredTimeUtc, reverseOrder()))
+            .map(SellerProductsController::convertToView)
+            .toArray(SellerProductView[]::new);
+        return ResponseEntity.ok(new ArrayCarrier<>(items));
+    }
+
+    private static SellerProductView convertToView(Product product) {
+        return new SellerProductView(
+            product.getId(),
+            product.getName(),
+            product.getImageUri(),
+            product.getDescription(),
+            product.getPriceAmount(),
+            product.getStockQuantity(),
+            product.getRegisteredTimeUtc()
+        );
     }
 }

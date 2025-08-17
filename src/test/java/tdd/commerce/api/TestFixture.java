@@ -14,6 +14,7 @@ import tdd.commerce.query.IssueShopperToken;
 import tdd.commerce.result.AccessTokenCarrier;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -120,5 +121,13 @@ public record TestFixture(
         String path = requireNonNull(location).getPath();
         String id = path.substring("/seller/products/".length());
         return UUID.fromString(id);
+    }
+
+    public List<UUID> registerProducts() {
+        return List.of(
+            registerProduct(),
+            registerProduct(),
+            registerProduct()
+        );
     }
 }
