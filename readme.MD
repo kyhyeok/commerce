@@ -391,3 +391,61 @@
 - [x] 상품 정보를 올바르게 반환한다
 - [x] 상품 등록 시각을 올바르게 반환한다
 - [x] 상품 목록을 등록 시점 역순으로 정렬한다
+
+### 구매자 상품 탐색
+
+요청
+- 메서드: GET
+- 경로: /shopper/products
+- 쿼리 매개변수
+  ```
+  continuationToken: string?
+  ```
+- 헤더
+  ```
+  Authorization: Bearer {accessToken}
+  ```
+- curl 명령 예시
+  ```bash
+  curl -i -X GET 'http://localhost:8080/shopper/products?continuationToken={continuationToken}' \
+  -H 'Authorization: Bearer {accessToken}'
+  ```
+
+성공 응답
+- 상태코드: 200 OK
+- 본문
+  ```
+  PageCarrier<ProductView> {
+    items: [
+      ProductView {
+        id: string(UUID),
+        seller: SellerView {
+          id: string(UUID),
+          username: string,
+          contactEmail: string
+        },
+        name: string,
+        imageUri: string,
+        description: string,
+        priceAmount: number,
+        stockQuantity: number
+      }
+    ],
+    continuationToken: string
+  }
+  ```
+
+정책
+- 상품 목록은 등록 시점 역순으로 정렬되어야 한다
+- 한 페이지는 최대 10개의 상품을 포함한다
+
+테스트
+- [x] 올바르게 요청하면 200 OK 상태코드를 반환한다
+- [x] 판매자 접근 토큰을 사용하면 403 Forbidden 상태코드를 반환한다
+- [x] 첫 번째 페이지의 상품을 반환한다
+- [x] 상품 목록을 등록 시점 역순으로 정렬한다
+- [x] 상품 정보를 올바르게 반환한다
+- [x] 판매자 정보를 올바르게 반환한다
+- [x] 두 번째 페이지를 올바르게 반환한다
+- [x] 마지막 페이지를 올바르게 반환한다
+- [x] continuationToken 매개변수에 빈 문자열이 지정되면 첫 번째 페이지를 반환한다
