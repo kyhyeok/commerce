@@ -1,13 +1,13 @@
 package tdd.commerce.api.controller;
 
+import java.security.Principal;
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tdd.commerce.Seller;
 import tdd.commerce.SellerRepository;
 import tdd.commerce.view.SellerMeView;
-
-import java.security.Principal;
-import java.util.UUID;
 
 @RestController
 public record SellerMeController(

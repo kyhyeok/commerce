@@ -1,6 +1,7 @@
 package tdd.commerce.api.controller;
 
-import org.springframework.dao.DataIntegrityViolationException;
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import tdd.commerce.Shopper;
 import tdd.commerce.ShopperRepository;
 import tdd.commerce.command.CreateShopperCommand;
-
-import java.util.UUID;
 
 import static tdd.commerce.UserPropertyValidator.isEmailValid;
 import static tdd.commerce.UserPropertyValidator.isPasswordValid;

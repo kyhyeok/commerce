@@ -1,7 +1,8 @@
 package tdd.commerce.api.shopper.products;
 
-import org.assertj.core.api.Condition;
-import org.assertj.core.api.ThrowingConsumer;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,11 +18,7 @@ import tdd.commerce.view.ProductView;
 import tdd.commerce.view.SellerMeView;
 import tdd.commerce.view.SellerView;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.RequestEntity.get;
 import static tdd.commerce.ProductAssertions.isViewDerivedFrom;

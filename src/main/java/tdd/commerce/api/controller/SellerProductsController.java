@@ -2,8 +2,6 @@ package tdd.commerce.api.controller;
 
 import java.net.URI;
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -12,14 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import tdd.commerce.Product;
 import tdd.commerce.ProductRepository;
 import tdd.commerce.command.RegisterProductCommand;
+import tdd.commerce.commandmodel.RegisterProductCommandExecutor;
+import tdd.commerce.query.FindSellerProduct;
+import tdd.commerce.query.GetSellerProducts;
+import tdd.commerce.querymodel.FindSellerProductQueryProcessor;
+import tdd.commerce.querymodel.GetSellerProductsQueryProcessor;
 import tdd.commerce.view.ArrayCarrier;
 import tdd.commerce.view.SellerProductView;
-
-import static java.time.ZoneOffset.UTC;
-import static java.util.Comparator.*;
 
 @RestController
 public record SellerProductsController(
@@ -31,69 +30,33 @@ public record SellerProductsController(
         @RequestBody RegisterProductCommand command,
         Principal user
     ) {
-        if (!isValidUri(command.imageUri())) {
-            return ResponseEntity.badRequest().build();
-        }
 
         UUID id = UUID.randomUUID();
-        var product = new Product();
-        product.setId(id);
-        product.setSellerId(UUID.fromString(user.getName()));
-        product.setName(command.name());
-        product.setImageUri(command.imageUri());
-        product.setDescription(command.description());
-        product.setPriceAmount(command.priceAmount());
-        product.setStockQuantity(command.stockQuantity());
-        product.setRegisteredTimeUtc(LocalDateTime.now(UTC));
-        repository.save(product);
+
+        var executor = new RegisterProductCommandExecutor(repository::save);
+
+        executor.execute(id, UUID.fromString(user.getName()), command);
 
         URI location = URI.create("/seller/products/" + id);
 
         return ResponseEntity.created(location).build();
     }
 
-    private boolean isValidUri(String value) {
-        try {
-            URI uri = URI.create(value);
-            return uri.getHost() != null;
-        } catch (IllegalArgumentException exception) {
-            return false;
-        }
-    }
-
     @GetMapping("/seller/products/{id}")
     ResponseEntity<?> findProduct(@PathVariable("id") UUID id, Principal user) {
-        UUID sellerId = UUID.fromString(user.getName());
+        var processor = new FindSellerProductQueryProcessor(repository::findById);
 
-        return repository.findById(id)
-            .filter(product -> product.getSellerId().equals(sellerId))
-            .map(SellerProductsController::convertToView)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+        var query = new FindSellerProduct(UUID.fromString(user.getName()), id);
+
+        return ResponseEntity.of(processor.process(query));
     }
 
     @GetMapping("/seller/products")
-    ResponseEntity<?> getProducts(Principal user) {
-        UUID sellerId = UUID.fromString(user.getName());
+    ArrayCarrier<SellerProductView> getProducts(Principal user) {
+        var processor = new GetSellerProductsQueryProcessor(repository::findBySellerId);
 
-        SellerProductView[] items = repository
-            .findBySellerId(sellerId)
-            .stream()
-            .sorted(comparing(Product::getRegisteredTimeUtc, reverseOrder()))
-            .map(SellerProductsController::convertToView)
-            .toArray(SellerProductView[]::new);
-        return ResponseEntity.ok(new ArrayCarrier<>(items));
-    }
+        var query = new GetSellerProducts(UUID.fromString(user.getName()));
 
-    private static SellerProductView convertToView(Product product) {
-        return new SellerProductView(
-            product.getId(),
-            product.getName(),
-            product.getImageUri(),
-            product.getDescription(),
-            product.getPriceAmount(),
-            product.getStockQuantity(),
-            product.getRegisteredTimeUtc()
-        );
+        return processor.process(query);
     }
 }

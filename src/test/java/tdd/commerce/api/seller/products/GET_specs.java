@@ -1,11 +1,13 @@
 package tdd.commerce.api.seller.products;
 
-import org.assertj.core.api.Assertions;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import tdd.commerce.api.CommerceApiTest;
 import tdd.commerce.api.TestFixture;
@@ -13,20 +15,12 @@ import tdd.commerce.command.RegisterProductCommand;
 import tdd.commerce.view.ArrayCarrier;
 import tdd.commerce.view.SellerProductView;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
-import static java.time.ZoneOffset.*;
-import static java.time.temporal.ChronoUnit.*;
-import static java.util.Comparator.*;
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.Comparator.reverseOrder;
 import static java.util.Objects.requireNonNull;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.springframework.http.RequestEntity.get;
 import static tdd.commerce.ProductAssertions.isDerivedFrom;
 import static tdd.commerce.RegisterProductCommandGenerator.generateRegisterProductCommand;

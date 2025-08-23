@@ -10,7 +10,6 @@ import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import tdd.commerce.ProductRepository;
@@ -25,7 +24,7 @@ import tdd.commerce.view.ProductView;
 import tdd.commerce.view.SellerMeView;
 
 import static java.util.Objects.requireNonNull;
-import static org.springframework.http.RequestEntity.*;
+import static org.springframework.http.RequestEntity.get;
 import static tdd.commerce.EmailGenerator.generateEmail;
 import static tdd.commerce.PasswordGenerator.generatePassword;
 import static tdd.commerce.RegisterProductCommandGenerator.generateRegisterProductCommand;

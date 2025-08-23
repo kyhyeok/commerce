@@ -3,10 +3,10 @@ package tdd.commerce;
 import java.math.BigDecimal;
 import java.util.function.Predicate;
 
+import org.assertj.core.api.ThrowingConsumer;
 import tdd.commerce.command.RegisterProductCommand;
 import tdd.commerce.view.ProductView;
 import tdd.commerce.view.SellerProductView;
-import org.assertj.core.api.ThrowingConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

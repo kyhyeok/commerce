@@ -1,18 +1,16 @@
 package tdd.commerce.api.seller.products.id;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-import tdd.commerce.command.RegisterProductCommand;
-import tdd.commerce.view.SellerProductView;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import tdd.commerce.api.CommerceApiTest;
 import tdd.commerce.api.TestFixture;
+import tdd.commerce.command.RegisterProductCommand;
+import tdd.commerce.view.SellerProductView;
 
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.SECONDS;
