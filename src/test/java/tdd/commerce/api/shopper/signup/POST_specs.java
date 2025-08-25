@@ -182,7 +182,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             generateUsername(),
-            null
+            null,
+            generateEmail()
         );
 
         // Act
@@ -206,7 +207,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             generateUsername(),
-            password
+            password,
+            generateEmail()
         );
 
         // Act
@@ -256,14 +258,14 @@ public class POST_specs {
 
         client.postForEntity(
             "/shopper/signUp",
-            new CreateSellerCommand(generateEmail(), username, generatePassword()),
+            new CreateSellerCommand(generateEmail(), username, generatePassword(), generateEmail()),
             Void.class
         );
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
             "/shopper/signUp",
-            new CreateSellerCommand(generateEmail(), username, generatePassword()),
+            new CreateSellerCommand(generateEmail(), username, generatePassword(), generateEmail()),
             Void.class
         );
 

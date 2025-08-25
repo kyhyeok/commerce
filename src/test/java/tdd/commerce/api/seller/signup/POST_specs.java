@@ -31,7 +31,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             generateUsername(),
-            "password"
+            "password",
+            generateEmail()
         );
 
         // Act
@@ -53,7 +54,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             null,
             generateUsername(),
-            "password"
+            "password",
+            generateEmail()
         );
 
         // Act
@@ -83,7 +85,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             email,
             generateUsername(),
-            "password"
+            "password",
+            generateEmail()
         );
 
         // Act
@@ -105,7 +108,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             null,
-            "password"
+            "password",
+            generateEmail()
         );
 
         // Act
@@ -136,7 +140,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             username,
-            "password"
+            "password",
+            generateEmail()
         );
 
         // Act
@@ -166,7 +171,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             username,
-            "password"
+            "password",
+            generateEmail()
         );
 
         // Act
@@ -188,7 +194,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             "seller",
-            null
+            null,
+            generateEmail()
         );
 
         // Act
@@ -212,7 +219,8 @@ public class POST_specs {
         var command = new CreateSellerCommand(
             generateEmail(),
             "seller",
-            password
+            password,
+            generateEmail()
         );
 
         // Act
@@ -235,14 +243,14 @@ public class POST_specs {
 
         client.postForEntity(
             "/seller/signUp",
-            new CreateSellerCommand(email, "seller", "password"),
+            new CreateSellerCommand(email, "seller", "password", generateEmail()),
             Void.class
         );
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
             "/seller/signUp",
-            new CreateSellerCommand(email, "seller", "password"),
+            new CreateSellerCommand(email, "seller", "password", generateEmail()),
             Void.class
         );
 
@@ -259,14 +267,14 @@ public class POST_specs {
 
         client.postForEntity(
             "/seller/signUp",
-            new CreateSellerCommand(generateEmail(), username, "password"),
+            new CreateSellerCommand(generateEmail(), username, "password", generateEmail()),
             Void.class
         );
 
         // Act
         ResponseEntity<Void> response = client.postForEntity(
             "/seller/signUp",
-            new CreateSellerCommand(generateEmail(), username, "password"),
+            new CreateSellerCommand(generateEmail(), username, "password", generateEmail()),
             Void.class
         );
 
@@ -284,7 +292,8 @@ public class POST_specs {
         CreateSellerCommand command = new CreateSellerCommand(
             generateEmail(),
             generateUsername(),
-            generatePassword()
+            generatePassword(),
+            generateEmail()
         );
 
         // Act

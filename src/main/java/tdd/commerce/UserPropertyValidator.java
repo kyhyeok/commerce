@@ -15,6 +15,19 @@ public class UserPropertyValidator {
     }
 
     public static boolean isPasswordValid(String password) {
-        return password != null && password.length() >= 8;
+        return password != null
+            && password.length() >= 8
+            && !contains4SequentialCharacters(password);
+    }
+
+    private static boolean contains4SequentialCharacters(String password) {
+        for (int i = 0; i < password.length() - 3; i++) {
+            if (password.charAt(i) + 1 == password.charAt(i + 1)
+                && password.charAt(i + 1) + 1 == password.charAt(i + 2)
+                && password.charAt(i + 2) + 1 == password.charAt(i + 3)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

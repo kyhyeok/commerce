@@ -23,6 +23,8 @@ import tdd.commerce.result.PageCarrier;
 import tdd.commerce.view.ProductView;
 import tdd.commerce.view.SellerMeView;
 
+import javax.print.DocFlavor;
+
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.RequestEntity.get;
 import static tdd.commerce.EmailGenerator.generateEmail;
@@ -44,7 +46,16 @@ public record TestFixture(
 
     public void createShopper(String email, String username, String password) {
         var command = new CreateShopperCommand(email, username, password);
-        client.postForEntity("/shopper/signUp", command, Void.class);
+        ensureSuccessful(
+            client.postForEntity("/shopper/signUp", command, Void.class),
+            command);
+    }
+
+    private void ensureSuccessful(ResponseEntity<Void> response, Object request) {
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            String message = "Request with " + request + " failed with status code " + response.getStatusCode();
+            throw new RuntimeException(message);
+        }
     }
 
     public String issueShopperToken(String email, String password) {
@@ -87,8 +98,11 @@ public record TestFixture(
     }
 
     private void createSeller(String email, String username, String password) {
-        var command = new CreateSellerCommand(email, username, password);
-        client.postForEntity("/seller/signUp", command, Void.class);
+        var command = new CreateSellerCommand(email, username, password, generateEmail());
+        ensureSuccessful(
+            client.postForEntity("/seller/signUp", command, Void.class),
+            command
+        );
     }
 
     private void setSellerAsDefaultUser(String email, String password) {

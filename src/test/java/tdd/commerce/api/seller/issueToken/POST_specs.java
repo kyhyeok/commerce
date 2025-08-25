@@ -30,7 +30,7 @@ public class POST_specs {
         String password = generatePassword();
 
         client.postForEntity(
-            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password),
+            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password, generateEmail()),
             Void.class
         );
 
@@ -54,7 +54,7 @@ public class POST_specs {
         String password = generatePassword();
 
         client.postForEntity(
-            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password),
+            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password, generateEmail()),
             Void.class
         );
 
@@ -79,7 +79,7 @@ public class POST_specs {
         String password = generatePassword();
 
         client.postForEntity(
-            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password),
+            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password, generateEmail()),
             Void.class
         );
 
@@ -124,7 +124,7 @@ public class POST_specs {
         String wrongPassword = generatePassword();
 
         client.postForEntity(
-            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password),
+            "/seller/signUp", new CreateSellerCommand(email, generateUsername(), password, generateEmail()),
             Void.class
         );
 
